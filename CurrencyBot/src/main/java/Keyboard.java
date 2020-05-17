@@ -11,6 +11,7 @@ import java.util.List;
 
 public class Keyboard {
 
+    //First Menu
     public static void setButtons_first(SendMessage sendMessage) throws IOException { // Create Keyboards
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup); // connecting message to keyboard
@@ -35,6 +36,7 @@ public class Keyboard {
         replyKeyboardMarkup.setKeyboard(keyboardRows); // install on a telegram chat
     }
 
+    //Second Menu
     public static void setButtons_second(SendMessage sendMessage) throws IOException {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
@@ -60,6 +62,7 @@ public class Keyboard {
 
     }
 
+    //Third Menu
     public static void setButtons_third(SendMessage sendMessage) throws IOException {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);

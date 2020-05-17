@@ -13,10 +13,10 @@ import java.util.regex.Pattern;
 
 public class Bot  extends TelegramLongPollingBot {
 
-    public static String cur;
-    public static double desc;
-    public static boolean converting;
-    public static boolean is_number;
+    public static String cur; // current Currency
+    public static double desc; // current Currency description
+    public static boolean converting; // to know what type of converting
+    public static boolean is_number; // to remove unwanted messages
 
     public static void main(String[] args) {
         ApiContextInitializer.init();
@@ -30,17 +30,18 @@ public class Bot  extends TelegramLongPollingBot {
         }
     }
 
+    // sendMessage to User
     public void sendMsg(Message message, String text, int buttons){
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(message.getChatId().toString()); // define to which particular chat we should send Message
         sendMessage.setReplyToMessageId(message.getMessageId()); // define to which particular chat we should send Message
-        sendMessage.setText(text.replaceAll("([_*`])", "\\\\$1"));
+        sendMessage.setText(text.replaceAll("([_*`])", "\\\\$1")); // remove characters that don't refer to response
         try{
             if(buttons == 1) Keyboard.setButtons_first(sendMessage);
             else if(buttons == 2) Keyboard.setButtons_second(sendMessage);
             else if(buttons == 3) Keyboard.setButtons_third(sendMessage);
-            execute(sendMessage);
+            execute(sendMessage); // send
 
         }catch (TelegramApiException | IOException e){
             e.printStackTrace();
@@ -55,6 +56,7 @@ public class Bot  extends TelegramLongPollingBot {
         execute(sendSticker);
     }
 
+    //to round double after common
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -68,12 +70,13 @@ public class Bot  extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Model model = new Model();
         Message message = update.getMessage();
-        String decimalPattern = "([0-9]*)\\.([0-9]*)";
-        String integerPattern = "[+-]?[0-9][0-9]*";
+        String decimalPattern = "([0-9]*)\\.([0-9]*)"; // check to Double
+        String integerPattern = "[+-]?[0-9][0-9]*"; // check to Integer
 
         if (message != null && message.hasText()) {
             System.out.println(message.getText());
 
+            /* Start */
             if (message.getText().equals("/start")) {
                 User user = message.getFrom();
                 try {
@@ -84,6 +87,7 @@ public class Bot  extends TelegramLongPollingBot {
                 sendMsg(message, "hello " + user.getFirstName() + "\nI am a currency bot \n With my help you can see the exchange rate in Tenge(KZT)", 1);
             }
 
+            /* First Menu */
             else if (message.getText().equals("Advice")) {
                 sendMsg(message, "Мистер Леприкон думает что будет лучше если вы купите доллар $", 1);
                 try {
@@ -97,6 +101,8 @@ public class Bot  extends TelegramLongPollingBot {
                 sendMsg(message, "Turukbayev Zamanbek +77080505268", 1);
             }
 
+
+            /* Second Menu */
             else if (message.getText().equals("Converting")) {
                 sendMsg(message, "Choose type of converting ", 3);
             }
@@ -106,6 +112,7 @@ public class Bot  extends TelegramLongPollingBot {
                 sendMsg(message, "Choose currency ", 1);
             }
 
+            /* Third Menu */
             else if (message.getText().equals(Bot.cur + " -> KZT")){
                 converting = true;
                 is_number = true;
@@ -118,8 +125,10 @@ public class Bot  extends TelegramLongPollingBot {
                 sendMsg(message, "Enter the amount", 3);
             }
 
-            else if (Pattern.matches(decimalPattern, message.getText()) || Pattern.matches(integerPattern, message.getText())) {
-                if (!message.getText().startsWith("-") && is_number) {
+
+            /* Converter */
+            else if (Pattern.matches(decimalPattern, message.getText()) || Pattern.matches(integerPattern, message.getText())) { // Check to Numeric
+                if (!message.getText().startsWith("-") && is_number) { // Check to Positive Numeric
                     try {
                         double d = Double.parseDouble(message.getText());
                         if(converting) {
@@ -136,12 +145,13 @@ public class Bot  extends TelegramLongPollingBot {
                         System.out.println("false value");
                         sendMsg(message, "Please enter true value", 1);
                     }
-                } else {
+                } else { // Check to unwanted message
                     sendMsg(message, "Please enter true value", 1);
                 }
 
             }
 
+            // Currencies (Валюты)
             else {
                 try {
                     model = Currency.getCurrency(message.getText());

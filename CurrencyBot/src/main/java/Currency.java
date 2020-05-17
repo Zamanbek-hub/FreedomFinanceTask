@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 public class Currency {
     public static Model getCurrency(String cur)  throws IOException {
-        Model model = new Model();
-        URL url = new URL("https://nationalbank.kz/rss/rates_all.xml?switch=russian");
+        Model model = new Model(); // create Model
+        URL url = new URL("https://nationalbank.kz/rss/rates_all.xml?switch=russian"); // Url Response
 
         Scanner in = new Scanner((InputStream) url.getContent());
 
@@ -22,14 +22,16 @@ public class Currency {
 
         System.out.println(result);
 
+        // Convert XML to JSON
         JSONObject xmlJSONObj = XML.toJSONObject(result);
-//        String jsonPrettyPrintString = xmlJSONObj.toString(4);
+        String jsonPrettyPrintString = xmlJSONObj.toString(4);
 //        System.out.println(jsonPrettyPrintString);
 
         JSONArray getArray = xmlJSONObj.getJSONObject("rss").getJSONObject("channel").getJSONArray("item");
-//        jsonPrettyPrintString = getArray.toString(4);
-//        System.out.println(jsonPrettyPrintString);
+        jsonPrettyPrintString = getArray.toString(4);
+        System.out.println(jsonPrettyPrintString);
 
+        // Selection currency and Convert Json to Model
         for(int i = 0; i < getArray.length(); i++){
             JSONObject obj = getArray.getJSONObject(i);
             if(obj.getString("title").equals(cur)){
@@ -46,6 +48,7 @@ public class Currency {
 
     }
 
+    // to get current Currency
     public static double getDescription(String cur) throws IOException {
         return getCurrency(cur).getDescription();
     }
