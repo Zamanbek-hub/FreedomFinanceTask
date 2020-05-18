@@ -1,5 +1,5 @@
 ## FreedomFinanceTask 
-## Run file CurrencyBot 
+## > Run file CurrencyBot 
 # Telegram Bot on Java☕ to currency exchange. This project done to vacancy of Freedom Finance
 **Этот Телеграм Бот Обменник Валют был сделан на языке Java☕ </br>**
 Freedom_Finance_Bot [currencyTengeJavabot](https://github.com/Zamanbek-hub/FreedomFinanceTask).
